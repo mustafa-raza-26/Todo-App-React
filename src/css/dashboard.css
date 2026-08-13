@@ -1,0 +1,736 @@
+/* ==========================================================================
+   RESET
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ==========================================================================
+   ROOT VARIABLES
+   ========================================================================== */
+:root {
+    --bg-deep: #051424;
+    --bg-card: #0d1c2d;
+    --primary-gradient: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+    --glow-green: rgba(34, 197, 94, .4);
+    --text-on-surface: #fff;
+    --text-muted: #94a3b8;
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+body {
+    background: var(--bg-deep);
+    color: var(--text-on-surface);
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+}
+
+/* ==========================================================================
+   SIDEBAR / NAVBAR / CONTENT
+   ========================================================================== */
+.sidebar {
+    position: relative;
+    background: #010f1f;
+    min-height: 100vh;
+    border-right: 1px solid rgba(255, 255, 255, .05);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+.tpt {
+    margin-top: 20px;
+}
+
+.help {
+    margin-top: auto;
+    /* Push help & logout buttons to bottom smoothly */
+    padding-top: 20px;
+}
+
+.help>a {
+    padding: 15px 25px;
+    margin-bottom: 10px;
+}
+
+/* .nav-link is used on both <a> (Today, Archive, Help) and
+   <button id="logoutBtn"> - reset button-specific defaults here */
+.nav-link {
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background: rgba(34, 197, 94, .1);
+    color: #22c55e;
+}
+
+.dashboard-navbar {
+    background: var(--bg-deep);
+    border-bottom: 1px solid rgba(255, 255, 255, .05);
+}
+
+.dashboard-content {
+    flex: 1;
+}
+
+.task-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, .05);
+    border-left: 4px solid #22c55e;
+    padding: 20px;
+    margin-left: 10px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+#dot {
+    cursor: pointer;
+}
+
+/* ==========================================================================
+   UTILITIES
+   ========================================================================== */
+.neon-text {
+    background: var(--primary-gradient);
+    /* -webkit-background-clip: text; */
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+.neon-btn {
+    background: var(--primary-gradient);
+    border: none;
+    color: #051424;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 8px;
+    transition: .3s;
+    text-transform: uppercase;
+}
+
+.neon-btn:hover {
+    box-shadow: 0 0 20px var(--glow-green);
+    transform: translateY(-2px);
+}
+
+/* Glowing border - dashboard search bar */
+.neon-border {
+    border: 1px solid rgba(34, 197, 94, .35);
+    box-shadow: 0 0 15px rgba(34, 197, 94, .15);
+    transition: .3s;
+}
+
+.neon-border:focus-within {
+    border-color: #22c55e;
+    box-shadow: 0 0 20px var(--glow-green);
+}
+
+.smallest {
+    font-size: .7rem;
+}
+
+.badge-neon {
+    background: rgba(34, 197, 94, .1);
+    color: #22c55e;
+    border: 1px solid #22c55e;
+}
+
+/* ==========================================================================
+   FORM CONTROLS (dark theme override for Bootstrap inputs / selects)
+   ========================================================================== */
+.form-control {
+    background: rgba(255, 255, 255, .05);
+    border: 1px solid rgba(255, 255, 255, .1);
+    color: #fff;
+}
+
+.form-control::placeholder {
+    color: #94a3b8;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, .08);
+    color: #fff;
+    border-color: #22c55e;
+    box-shadow: 0 0 10px var(--glow-green);
+}
+
+select {
+    background: rgba(255, 255, 255, .05);
+    border: 1px solid rgba(255, 255, 255, .1);
+    color: #fff;
+    border-radius: 8px;
+    padding: 10px 14px;
+    outline: none;
+}
+
+select:focus {
+    border-color: #22c55e;
+    box-shadow: 0 0 10px var(--glow-green);
+}
+
+select option {
+    background: #111;
+    color: #fff;
+}
+
+/* ==========================================================================
+   MODAL / TASK FORM
+   ========================================================================== */
+.modal-content.task-modal {
+    background: #111;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 18px;
+    box-shadow: 0 0 60px rgba(0, 255, 150, .08);
+    color: #fff;
+}
+
+.modal-header {
+    padding: 25px 30px 10px;
+}
+
+.modal-body {
+    padding: 10px 30px;
+}
+
+.modal-footer {
+    padding: 20px 30px 30px;
+}
+
+.heading {
+    color: #42d37c;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-group span {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+}
+
+.input-group input {
+    background: none;
+}
+
+.input-group-text {
+    background: #1a1a1a;
+    border: 1px solid #2b2b2b;
+    color: #fff;
+}
+
+.form-input,
+.form-textarea {
+    width: 60%;
+    background: rgba(255, 255, 255, .05);
+    border: 1px solid rgba(255, 255, 255, .1);
+    color: #fff;
+    border-radius: 8px;
+    padding: 12px 45px;
+    outline: none;
+}
+
+.form-textarea {
+    width: 90%;
+    height: auto;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    background: rgba(255, 255, 255, .08);
+    color: #fff;
+    border-color: #22c55e;
+    transition: 0.8s;
+    box-shadow: 0 0 10px var(--glow-green);
+}
+
+.btn-close {
+    opacity: 1;
+}
+
+/* ==========================================================================
+   PRIORITY BADGES
+   ========================================================================== */
+.priority {
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 10px 20px;
+}
+
+.high {
+    background: #2b1515;
+    color: #ff6666;
+    border: 1px solid #5b2a2a;
+}
+
+.mid {
+    background: #31240f;
+    color: #ffc14d;
+    border: 1px solid #70501a;
+}
+
+.low {
+    background: #13233b;
+    color: #69a7ff;
+    border: 1px solid #284a83;
+}
+
+select>.priority:hover {
+    transform: translateY(-2px);
+}
+
+.create-btn {
+    background: #45e487;
+    color: #111;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    height: 52px;
+    transition: .3s;
+}
+
+.create-btn:hover {
+    background: #39d57a;
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(69, 228, 135, .35);
+}
+
+/* ==========================================================================
+   MEDIA QUERIES (MOBILE FIXES)
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    #sidebarOffcanvas.offcanvas-md {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+        right: auto !important;
+        width: 245px !important;
+        max-width: 80vw !important;
+        height: 100vh !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.3s ease-in-out !important;
+        padding: 20px 10px !important;
+        margin: 0 !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+
+        /* Fixed scrolling and layout for mobile offcanvas */
+        overflow-y: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    #sidebarOffcanvas.offcanvas-md.show {
+        transform: translateX(0) !important;
+    }
+
+    #sidebarOffcanvas.offcanvas-md.showing,
+    #sidebarOffcanvas.offcanvas-md.hiding {
+        transform: translateX(-100%);
+    }
+
+    #sidebarOffcanvas.offcanvas-md.show.showing {
+        transform: translateX(0);
+    }
+
+    .help {
+        position: relative !important;
+        bottom: 50px !important;
+        left: auto !important;
+        right: auto !important;
+        margin-top: auto !important;
+        padding-top: 20px;
+    }
+
+    .form-input,
+    .form-textarea {
+        width: 90%;
+        background: rgba(255, 255, 255, .05);
+        border: 1px solid rgba(255, 255, 255, .1);
+        color: #fff;
+        border-radius: 8px;
+        padding: 12px 45px;
+        outline: none;
+    }
+
+    .form-textarea {
+        width: 100%;
+        height: auto;
+    }
+}
+
+/* =========================================
+   REACT TASK MODAL
+   ========================================= */
+
+.neon-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.75);
+}
+
+.neon-modal {
+    width: 100%;
+    max-width: 720px;
+
+    background: #111;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 0 60px rgba(0, 255, 150, 0.08);
+
+    color: #fff;
+
+    overflow: hidden;
+}
+
+/* HEADER */
+
+.neon-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 25px 30px 15px;
+}
+
+.neon-modal-header h5 {
+    margin: 0;
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.neon-modal-header h5 i {
+    color: #22c55e;
+    margin-right: 10px;
+}
+
+.neon-modal-close {
+    width: 35px;
+    height: 35px;
+
+    border: none;
+    background: transparent;
+
+    color: #fff;
+
+    font-size: 30px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    opacity: 0.7;
+}
+
+.neon-modal-close:hover {
+    opacity: 1;
+    color: #22c55e;
+}
+
+/* BODY */
+
+.neon-modal-body {
+    padding: 10px 30px 20px;
+}
+
+/* LABEL */
+
+.neon-modal-body .heading {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #42d37c;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+/* INPUT WRAPPER */
+
+.neon-field {
+    position: relative;
+
+    width: 100%;
+
+    margin-bottom: 24px;
+}
+
+/* ICON */
+
+.neon-field-icon {
+    position: absolute;
+
+    left: 16px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    z-index: 10;
+
+    color: #42d37c;
+
+    font-size: 15px;
+
+    pointer-events: none;
+}
+
+/* INPUT */
+
+.neon-field input {
+    display: block;
+
+    width: 100%;
+    height: 50px;
+
+    padding: 12px 16px 12px 45px;
+
+    background: rgba(255, 255, 255, 0.05);
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 8px;
+
+    color: #fff;
+
+    outline: none;
+
+    font-family: inherit;
+}
+
+.neon-field input::placeholder {
+    color: #94a3b8;
+}
+
+.neon-field input:focus {
+    border-color: #22c55e;
+
+    box-shadow:
+        0 0 10px rgba(34, 197, 94, 0.4);
+}
+
+/* TEXTAREA */
+
+.neon-textarea-field {
+    position: relative;
+}
+
+.neon-textarea-field .neon-field-icon {
+    top: 20px;
+
+    transform: none;
+}
+
+.neon-field textarea {
+    display: block;
+
+    width: 100%;
+
+    min-height: 130px;
+
+    padding: 14px 16px 14px 45px;
+
+    background: rgba(255, 255, 255, 0.05);
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 8px;
+
+    color: #fff;
+
+    outline: none;
+
+    resize: vertical;
+
+    font-family: inherit;
+}
+
+.neon-field textarea::placeholder {
+    color: #94a3b8;
+}
+
+.neon-field textarea:focus {
+    border-color: #22c55e;
+
+    box-shadow:
+        0 0 10px rgba(34, 197, 94, 0.4);
+}
+
+/* PRIORITY */
+
+.priority-wrapper {
+    margin-top: 5px;
+}
+
+.priority-wrapper select {
+    width: auto;
+
+    min-width: 130px;
+
+    padding: 10px 14px;
+
+    background: rgba(255, 255, 255, 0.05);
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    border-radius: 8px;
+
+    color: #fff;
+
+    outline: none;
+}
+
+.priority-wrapper select:focus {
+    border-color: #22c55e;
+
+    box-shadow:
+        0 0 10px rgba(34, 197, 94, 0.4);
+}
+
+/* FOOTER */
+
+.neon-modal-footer {
+    display: flex;
+
+    justify-content: flex-end;
+
+    padding: 15px 30px 30px;
+}
+
+/* CREATE BUTTON */
+
+.neon-modal-footer .create-btn {
+    height: 52px;
+
+    padding: 0 30px;
+
+    background: #45e487;
+
+    color: #111;
+
+    font-weight: 700;
+
+    border: none;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.neon-modal-footer .create-btn:hover {
+    background: #39d57a;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 0 20px rgba(69, 228, 135, 0.35);
+}
+
+/* MOBILE */
+
+@media (max-width: 576px) {
+
+    .neon-modal-overlay {
+        padding: 15px;
+    }
+
+    .neon-modal-header {
+        padding: 20px 20px 10px;
+    }
+
+    .neon-modal-body {
+        padding: 10px 20px 15px;
+    }
+
+    .neon-modal-footer {
+        padding: 10px 20px 20px;
+    }
+
+    .neon-field input {
+        height: 48px;
+    }
+
+    .neon-modal-footer .create-btn {
+        width: 100%;
+    }
+}
+
+/* =========================================
+   TODO DELETE BUTTON
+   ========================================= */
+
+.delete-todo-btn {
+    flex-shrink: 0;
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 102, 44, 0.08);
+
+    border: 1px solid rgba(0, 120, 42, 0.25);
+
+    border-radius: 8px;
+
+    color: #10b981;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.delete-todo-btn:hover {
+    background: rgba(0, 113, 55, 0.15);
+    border-color: #10b981;
+    box-shadow: 0 0 15px rgba(2, 130, 60, 0.25);
+    transform: translateY(-2px);
+}
+
+.delete-todo-btn i {
+    font-size: 14px;
+}

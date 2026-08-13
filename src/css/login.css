@@ -1,0 +1,143 @@
+/* ==========================================================================
+   RESET
+   ========================================================================== */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+/* ==========================================================================
+   ROOT VARIABLES
+   ========================================================================== */
+:root{
+    --bg-deep:#051424;
+    --bg-card:#0d1c2d;
+    --primary-gradient:linear-gradient(135deg,#22c55e 0%,#10b981 100%);
+    --glow-green:rgba(34,197,94,.4);
+    --text-on-surface:#fff;
+    --text-muted:#94a3b8;
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+body{
+    background:var(--bg-deep);
+    color:var(--text-on-surface);
+    font-family:'Montserrat',sans-serif;
+    overflow-x:hidden;
+}
+
+/* ==========================================================================
+   UTILITIES
+   ========================================================================== */
+.neon-text{
+    background:var(--primary-gradient);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    font-weight:800;
+}
+
+.neon-btn{
+    background:var(--primary-gradient);
+    border:none;
+    color:#051424;
+    font-weight:700;
+    padding:12px 24px;
+    border-radius:8px;
+    transition:.3s;
+    text-transform:uppercase;
+}
+
+.neon-btn:hover{
+    box-shadow:0 0 20px var(--glow-green);
+    transform:translateY(-2px);
+}
+
+/* Logo image + "NEON_TASK" text row */
+.logo_word{
+    align-items:center;
+    gap:10px;
+}
+
+/* ==========================================================================
+   AUTH CARD
+   ========================================================================== */
+
+.auth-container{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.auth-card{
+    background:var(--bg-card);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:16px;
+    padding:40px;
+    width:100%;
+    max-width:450px;
+}
+
+/* ==========================================================================
+   FORM CONTROL (dark theme override for Bootstrap inputs)
+   ========================================================================== */
+.form-control{
+    padding: 10px 25px;
+    padding-left: 40px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);
+    color:#fff;
+}
+
+.form-control::placeholder{
+    color:#94a3b8;
+}
+
+.form-control:focus{
+    background:rgba(255,255,255,.08);
+    color:#fff;
+    border-color:#22c55e;
+    box-shadow:0 0 10px var(--glow-green);
+}
+/* ==========================================================================
+   ICONS INSIDE INPUTS (email / password)
+   ========================================================================== */
+.mb-3,.mb-4{
+    position:relative;
+}
+
+.mb-3 span i{
+    position:absolute;
+    top: 45px;
+    left: 15px;
+    color:#94a3b8;
+    font-size:18px;
+    transition:.3s;
+}
+.fa-eye{
+    cursor:pointer;
+}
+.mb-4>span>i{
+    position: absolute;
+    top: 45px;
+    right: 10px;
+}
+.lock{
+    position: absolute;
+    top: 45px;
+    left: 10px;
+}
+
+/* Focus effect - icons + label turn green when their input is focused */
+.mb-3:has(.form-control:focus) label,
+.mb-4:has(.form-control:focus) label,
+.mb-3:has(.form-control:focus) .fa-envelope,
+.mb-4:has(.form-control:focus) .fa-eye,
+.mb-4:has(.form-control:focus) .lock{
+    color:#22c55e;
+    transition:0.8s;
+}
