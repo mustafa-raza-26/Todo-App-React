@@ -124,8 +124,8 @@ const Login = () => {
               Security Key
             </label>
 
-            <span className="material-symbols-outlined lock">
-              lock
+            <span className="lock">
+              <i class="fa-solid fa-lock"></i>
             </span>
 
             <input

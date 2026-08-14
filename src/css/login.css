@@ -128,8 +128,7 @@ body{
 }
 .lock{
     position: absolute;
-    top: 45px;
-    left: 10px;
+    left: 40px;
 }
 
 /* Focus effect - icons + label turn green when their input is focused */
