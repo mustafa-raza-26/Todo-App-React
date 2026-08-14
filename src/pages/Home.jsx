@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import Section1 from "../components/section1";
-import Display from "../components/display";
+import Display from "../components/Display";
 import TaskModal from "../components/TaskModal";
 
 import { client } from "../lib/supabase";
