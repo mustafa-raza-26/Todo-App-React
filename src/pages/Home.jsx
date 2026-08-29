@@ -22,6 +22,9 @@ const Home = () => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Selected todo for editing
+  const [editingTodo, setEditingTodo] = useState(null);
+
   // =========================================
   // LOAD TODOS
   // =========================================
@@ -35,20 +38,17 @@ const Home = () => {
         error: userError,
       } = await client.auth.getUser();
 
-      // User error
       if (userError) {
         console.error("User Error:", userError);
         navigate("/login");
         return;
       }
 
-      // User not logged in
       if (!user) {
         navigate("/login");
         return;
       }
 
-      // Get user's todos
       const { data, error } = await client
         .from("todo_user_data")
         .select("*")
@@ -80,10 +80,14 @@ const Home = () => {
   }, []);
 
   // =========================================
-  // OPEN TASK MODAL
+  // OPEN NEW TASK MODAL
   // =========================================
 
   const handleNewTask = () => {
+    // Edit mode remove
+    setEditingTodo(null);
+
+    // Open modal
     setShowModal(true);
   };
 
@@ -93,6 +97,9 @@ const Home = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
+
+    // Clear editing todo
+    setEditingTodo(null);
   };
 
   // =========================================
@@ -101,7 +108,6 @@ const Home = () => {
 
   const handleCreateTodo = async (todo) => {
     try {
-      // Get logged-in user
       const {
         data: { user },
       } = await client.auth.getUser();
@@ -111,7 +117,6 @@ const Home = () => {
         return false;
       }
 
-      // Insert todo into Supabase
       const { data, error } = await client
         .from("todo_user_data")
         .insert({
@@ -123,30 +128,20 @@ const Home = () => {
         .select()
         .single();
 
-      // Supabase error
       if (error) {
         console.error("Create Todo Error:", error);
         alert(error.message);
-
-        // Modal open rahega
         return false;
       }
 
-      // Add newly created todo at top
+      // Add new todo at top
       setTodos((prevTodos) => [
         data,
         ...prevTodos,
       ]);
 
-      // =====================================
-      // IMPORTANT:
-      // Todo successfully save hone ke baad
-      // modal close hoga
-      // =====================================
-
       setShowModal(false);
 
-      // TaskModal ko success return
       return true;
 
     } catch (error) {
@@ -157,6 +152,108 @@ const Home = () => {
     }
   };
 
+  // =========================================
+  // EDIT TODO
+  // =========================================
+
+  const handleEdit = (todo) => {
+    // Save selected todo
+    setEditingTodo(todo);
+
+    // Open modal
+    setShowModal(true);
+  };
+
+  // =========================================
+  // UPDATE TODO
+  // =========================================
+
+  const handleUpdateTodo = async (updatedTodo) => {
+    try {
+      console.log("Editing Todo:", editingTodo);
+
+      const {
+        data: { user },
+        error: userError,
+      } = await client.auth.getUser();
+
+      console.log("Logged In User:", user);
+
+      if (userError || !user) {
+        alert("User not logged in.");
+        navigate("/login");
+        return false;
+      }
+
+      // Check whether task exists
+      const { data: existingTodo, error: checkError } = await client
+        .from("todo_user_data")
+        .select("*")
+        .eq("id", editingTodo.id)
+        .eq("auth_id", user.id);
+
+      console.log("Existing Todo:", existingTodo);
+      console.log("Check Error:", checkError);
+
+      if (checkError) {
+        console.error(checkError);
+        alert(checkError.message);
+        return false;
+      }
+
+      if (!existingTodo || existingTodo.length === 0) {
+        alert("Task not found for this user.");
+        return false;
+      }
+
+      // UPDATE
+      const { data, error } = await client
+        .from("todo_user_data")
+        .update({
+          todo_Name: updatedTodo.todo_Name,
+          todo_Explanation: updatedTodo.todo_Explanation,
+          priority: updatedTodo.priority,
+        })
+        .eq("id", editingTodo.id)
+        .eq("auth_id", user.id)
+        .select();
+
+      console.log("Updated Data:", data);
+      console.log("Update Error:", error);
+
+      if (error) {
+        alert(error.message);
+        console.error("Update Error:", error);
+        return false;
+      }
+
+      if (!data || data.length === 0) {
+        alert(
+          "Update failed. Check your Supabase RLS UPDATE policy."
+        );
+        return false;
+      }
+
+      // Update UI
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) =>
+          todo.id === editingTodo.id
+            ? data[0]
+            : todo
+        )
+      );
+
+      setShowModal(false);
+      setEditingTodo(null);
+
+      return true;
+
+    } catch (error) {
+      console.error("Unexpected Update Error:", error);
+      alert("Something went wrong.");
+      return false;
+    }
+  };
   // =========================================
   // DELETE TODO
   // =========================================
@@ -171,10 +268,21 @@ const Home = () => {
     }
 
     try {
+      // Get logged-in user
+      const {
+        data: { user },
+      } = await client.auth.getUser();
+
+      if (!user) {
+        navigate("/login");
+        return;
+      }
+
       const { error } = await client
         .from("todo_user_data")
         .delete()
-        .eq("id", id);
+        .eq("id", id)
+        .eq("auth_id", user.id);
 
       if (error) {
         console.error("Delete Todo Error:", error);
@@ -219,7 +327,6 @@ const Home = () => {
         return;
       }
 
-      // Redirect to login
       navigate("/login");
 
     } catch (error) {
@@ -243,6 +350,7 @@ const Home = () => {
         }}
       >
         <div className="text-center">
+
           <div
             className="spinner-border text-success mb-3"
             role="status"
@@ -251,6 +359,7 @@ const Home = () => {
           <p className="mb-0">
             Loading Neon Task...
           </p>
+
         </div>
       </div>
     );
@@ -262,47 +371,30 @@ const Home = () => {
 
   return (
     <div className="container-fluid p-0">
+
       <div className="row g-0">
 
-        {/* =================================
-            SIDEBAR
-        ================================= */}
-
+        {/* SIDEBAR */}
         <Sidebar
           onNewTask={handleNewTask}
           onLogout={handleLogout}
         />
 
-        {/* =================================
-            RIGHT SIDE
-        ================================= */}
-
+        {/* RIGHT SIDE */}
         <div className="col-12 col-md-10 d-flex flex-column p-0">
 
-          {/* =================================
-              NAVBAR
-          ================================= */}
-
+          {/* NAVBAR */}
           <Navbar />
 
-          {/* =================================
-              CONTENT
-          ================================= */}
-
+          {/* CONTENT */}
           <main className="dashboard-content p-4 p-md-5">
 
-            {/* =================================
-                NEW TASK INPUT
-            ================================= */}
-
+            {/* NEW TASK */}
             <Section1
               onNewTask={handleNewTask}
             />
 
-            {/* =================================
-                TASK SECTION
-            ================================= */}
-
+            {/* TASK SECTION */}
             <div className="row col-12 g-4">
 
               <div className="container">
@@ -317,13 +409,11 @@ const Home = () => {
 
                 </h4>
 
-                {/* =================================
-                    TODO DISPLAY
-                ================================= */}
-
+                {/* TODO DISPLAY */}
                 <Display
                   todos={todos}
                   onDelete={handleDelete}
+                  onEdit={handleEdit}
                 />
 
               </div>
@@ -344,6 +434,8 @@ const Home = () => {
         show={showModal}
         onClose={handleCloseModal}
         onCreate={handleCreateTodo}
+        onUpdate={handleUpdateTodo}
+        editingTodo={editingTodo}
       />
 
     </div>

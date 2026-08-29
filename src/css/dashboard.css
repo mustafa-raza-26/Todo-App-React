@@ -697,40 +697,58 @@ select>.priority:hover {
     }
 }
 
-/* =========================================
-   TODO DELETE BUTTON
-   ========================================= */
-
-.delete-todo-btn {
+/* Edit */
+.edit-todo-btn {
     flex-shrink: 0;
-
     width: 38px;
     height: 38px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     background: rgba(0, 102, 44, 0.08);
-
     border: 1px solid rgba(0, 120, 42, 0.25);
-
     border-radius: 8px;
-
     color: #10b981;
-
     cursor: pointer;
-
     transition: 0.3s;
 }
 
-.delete-todo-btn:hover {
+.edit-todo-btn:hover {
     background: rgba(0, 113, 55, 0.15);
     border-color: #10b981;
     box-shadow: 0 0 15px rgba(2, 130, 60, 0.25);
     transform: translateY(-2px);
 }
 
-.delete-todo-btn i {
+.edit-todo-btn i {
+    font-size: 14px;
+}
+
+/* TODO DELETE BUTTON */
+
+.delete-todo-btn {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 102, 44, 0.08);
+    border: 1px solid rgba(0, 120, 42, 0.25);
+    border-radius: 8px;
+    color: #10b981;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.delete-todo-btn:hover {
+    background: rgba(113, 0, 0, 0.15);
+    border-color: #b91010;
+    box-shadow: 0 0 15px rgba(130, 2, 2, 0.25);
+    transform: translateY(-2px);
+    color: #b91010;
+}
+
+.delete-todo-btn{
     font-size: 14px;
 }

@@ -1,77 +1,170 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const TaskModal = ({ show, onClose, onCreate }) => {
+const TaskModal = ({
+  show,
+  onClose,
+  onCreate,
+  onUpdate,
+  editingTodo,
+}) => {
+  // =========================================
+  // STATES
+  // =========================================
+
   const [todoName, setTodoName] = useState("");
   const [todoDescription, setTodoDescription] = useState("");
   const [priority, setPriority] = useState("HIGH");
 
-  if (!show) return null;
+  // =========================================
+  // LOAD EDIT DATA
+  // =========================================
 
-const handleCreate = async () => {
-  if (!todoName.trim()) {
-    alert("Please enter task title.");
-    return;
-  }
+  useEffect(() => {
+    if (editingTodo) {
+      // Edit mode
+      setTodoName(editingTodo.todo_Name || "");
+      setTodoDescription(
+        editingTodo.todo_Explanation || ""
+      );
+      setPriority(editingTodo.priority || "HIGH");
+    } else {
+      // Create mode
+      setTodoName("");
+      setTodoDescription("");
+      setPriority("HIGH");
+    }
+  }, [editingTodo, show]);
 
-  const success = await onCreate({
-    todo_Name: todoName,
-    todo_Explanation: todoDescription,
-    priority: priority,
-  });
+  // =========================================
+  // CLOSE MODAL
+  // =========================================
 
-  // Sirf successful save ke baad modal close hoga
-  if (success) {
+  const handleClose = () => {
     setTodoName("");
     setTodoDescription("");
     setPriority("HIGH");
-  }
-};
+
+    onClose();
+  };
+
+  // =========================================
+  // SUBMIT FORM
+  // =========================================
+
+  const handleSubmit = async () => {
+    // Validation
+    if (!todoName.trim()) {
+      alert("Please enter task title.");
+      return;
+    }
+
+    const todoData = {
+      todo_Name: todoName,
+      todo_Explanation: todoDescription,
+      priority: priority,
+    };
+
+    let success = false;
+
+    // =========================================
+    // EDIT MODE
+    // =========================================
+
+    if (editingTodo) {
+      success = await onUpdate(todoData);
+    }
+
+    // =========================================
+    // CREATE MODE
+    // =========================================
+
+    else {
+      success = await onCreate(todoData);
+    }
+
+    // =========================================
+    // RESET FORM AFTER SUCCESS
+    // =========================================
+
+    if (success) {
+      setTodoName("");
+      setTodoDescription("");
+      setPriority("HIGH");
+    }
+  };
+
+  // Don't show modal
+  if (!show) return null;
 
   return (
     <div className="neon-modal-overlay">
       <div className="neon-modal">
 
-        {/* HEADER */}
+        {/* =================================
+            HEADER
+        ================================= */}
+
         <div className="neon-modal-header">
+
           <h5>
-            <i className="bi bi-plus-lg"></i>
-            Initialize Task
+            <i
+              className={
+                editingTodo
+                  ? "bi bi-pencil-square"
+                  : "bi bi-plus-lg"
+              }
+            ></i>
+
+            {editingTodo
+              ? " Edit Task"
+              : " Initialize Task"}
           </h5>
 
           <button
             type="button"
             className="neon-modal-close"
-            onClick={onClose}
+            onClick={handleClose}
           >
             ×
           </button>
+
         </div>
 
-        {/* BODY */}
+        {/* =================================
+            BODY
+        ================================= */}
+
         <div className="neon-modal-body">
 
-          {/* TITLE */}
+          {/* TASK TITLE */}
+
           <label className="heading">
             TASK TITLE
           </label>
 
           <div className="neon-field">
+
             <i className="fa-solid fa-pen-to-square neon-field-icon"></i>
 
             <input
               type="text"
               placeholder="What needs to be done?"
               value={todoName}
-              onChange={(e) => setTodoName(e.target.value)}
+              onChange={(e) =>
+                setTodoName(e.target.value)
+              }
             />
+
           </div>
 
           {/* DESCRIPTION */}
+
           <label className="heading">
             DESCRIPTION
           </label>
 
           <div className="neon-field neon-textarea-field">
+
             <i className="fa-solid fa-bars neon-field-icon"></i>
 
             <textarea
@@ -82,9 +175,11 @@ const handleCreate = async () => {
                 setTodoDescription(e.target.value)
               }
             ></textarea>
+
           </div>
 
           {/* PRIORITY */}
+
           <div className="priority-wrapper">
 
             <label className="heading">
@@ -106,14 +201,30 @@ const handleCreate = async () => {
 
         </div>
 
-        {/* FOOTER */}
+        {/* =================================
+            FOOTER
+        ================================= */}
+
         <div className="neon-modal-footer">
+
           <button
             className="create-btn"
-            onClick={handleCreate}
+            onClick={handleSubmit}
           >
-            Initialize Task
+            <i
+              className={
+                editingTodo
+                  ? "bi bi-check-lg me-2"
+                  : "bi bi-plus-lg me-2"
+              }
+            ></i>
+
+            {editingTodo
+              ? "Update Task"
+              : "Initialize Task"}
+
           </button>
+
         </div>
 
       </div>

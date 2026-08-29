@@ -1,6 +1,6 @@
 import React from "react";
 
-const Display = ({ todos, onDelete }) => {
+const Display = ({ todos, onDelete, onEdit }) => {
   if (!todos || todos.length === 0) {
     return (
       <div className="text-center text-white-50 py-5">
@@ -20,7 +20,6 @@ const Display = ({ todos, onDelete }) => {
 
             {/* TASK CONTENT */}
             <div className="flex-grow-1">
-
               <h5 className="mb-2">
                 {todo.todo_Name}
               </h5>
@@ -32,18 +31,32 @@ const Display = ({ todos, onDelete }) => {
               <span className="badge badge-neon">
                 {todo.priority} Priority
               </span>
-
             </div>
 
-            {/* DELETE BUTTON */}
-            <button
-              type="button"
-              className="delete-todo-btn"
-              onClick={() => onDelete(todo.id)}
-              title="Delete Task"
-            >
-              <i className="fa-solid fa-trash"></i>
-            </button>
+            {/* ACTION BUTTONS */}
+            <div className="d-flex gap-2">
+
+              {/* EDIT BUTTON */}
+              <button
+                type="button"
+                className="edit-todo-btn"
+                onClick={() => onEdit(todo)}
+                title="Edit Task"
+              >
+                <i className="fa-solid fa-pen-to-square"></i>
+              </button>
+
+              {/* DELETE BUTTON */}
+              <button
+                type="button"
+                className="delete-todo-btn"
+                onClick={() => onDelete(todo.id)}
+                title="Delete Task"
+              >
+                <i className="fa-solid fa-trash"></i>
+              </button>
+
+            </div>
 
           </div>
         </div>
