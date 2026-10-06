@@ -100,9 +100,14 @@ body {
     margin-left: 10px;
     border-radius: 8px;
     margin-bottom: 16px;
-    overflow-wrap: break-word;
+    overflow: hidden;
 }
 
+.description{
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: normal;
+}
 #dot {
     cursor: pointer;
 }
