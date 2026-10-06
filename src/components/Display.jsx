@@ -24,7 +24,7 @@ const Display = ({ todos, onDelete, onEdit }) => {
                 {todo.todo_Name}
               </h5>
 
-              <p className="text-white-50 mb-3">
+              <p className="description text-white-50 mb-3">
                 {todo.todo_Explanation || "No description added."}
               </p>
 
